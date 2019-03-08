@@ -13,6 +13,7 @@ before_script:
 build_latest:
   stage: build_latest
   script:
+    - ls
     - ./get_tags.sh
     - ./build.sh
   only:
