@@ -13,9 +13,7 @@ before_script:
 build_latest:
   stage: build_latest
   script:
-    - 'export VERSION=`cat latest`'
-    - 'export SHELL_VERSION=`cat shell-latest`'
-    - 'export latest=`curl -Is https://hub.docker.com/v2/repositories/richarvey/awscli/tags/$(cat latest)/ | head -n 1|cut -d$' ' -f2`'
-    - if [ ${latest} == "200" ]; then echo "Build Exists: Nothing to do!" && exit 0 else echo "Building: awscli" && docker build --build-arg VERSION="${VERSION}" -t "richarvey/awscli:${VERSION}" . && docker push "richarvey/awscli:${VERSION}" && docker tag "richarvey/awscli:${VERSION}" richarvey/awscli:latest && docker push richarvey/awscli:latest fi
+    - ./get_tags.sh
+    - ./build.sh
   only:
     - master
