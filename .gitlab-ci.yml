@@ -13,6 +13,7 @@ before_script:
 build_latest:
   stage: build_latest
   script:
+    - apk add --update curl && apk add --update jq && rm -rf /var/cache/apk/*
     - "sh get_tags.sh"
     - "sh build.sh"
   only:
