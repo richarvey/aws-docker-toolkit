@@ -13,7 +13,7 @@ before_script:
 build_latest:
   stage: build_latest
   script:
-    - bash get_tags.sh
-    - bash build.sh
+    - /bin/bash get_tags.sh
+    - /bin/bash build.sh
   only:
     - master
