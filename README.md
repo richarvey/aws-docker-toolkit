@@ -4,10 +4,8 @@ Dockerised version of awscli and aws-shell, images are built using latest alpine
 
 ### Downloading
 
-Pick a version you want to download for example 1.16.121
-
 ```
-docker pull richarvey/awscli:1.16.121
+docker pull richarvey/awscli:latest
 ```
 
 see all tags at [https://hub.docker.com/r/richarvey/awscli/tags/](https://hub.docker.com/r/richarvey/awscli/tags/)
@@ -19,7 +17,7 @@ see all tags at [https://hub.docker.com/r/richarvey/awscli/tags/](https://hub.do
 Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
 
 ```
-docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:${VERSION} aws ${COMMAND}
+docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest aws ${COMMAND}
 ```
 
 You can set an alias and then use awscli as normal from your shell if desired:
@@ -39,7 +37,7 @@ aws() {
 Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
 
 ```
-docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:${VERSION} aws-shell
+docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest aws-shell
 ```
 
 #### bash mode
@@ -47,6 +45,6 @@ docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:${VER
 Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
 
 ```
-docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:${VERSION} bash
+docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest bash
 ```
 
