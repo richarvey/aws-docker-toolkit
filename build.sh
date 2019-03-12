@@ -9,7 +9,7 @@ if [ ${latest} == "200" ]; then
     exit 0
 else
     echo "Building: awscli"
-    docker build --build-arg VERSION="${VERSION}" -t "richarvey/awscli:${VERSION}" . && \
+    docker build --build-arg CLI_VERSION="${VERSION}" --build-arg SHELL_VERSION="${SHELL_VERSION}" -t "richarvey/awscli:${VERSION}" . && \
     docker push "richarvey/awscli:${VERSION}"
 
     docker tag richarvey/awscli:${VERSION} richarvey/awscli:latest && docker push "richarvey/awscli:latest"
