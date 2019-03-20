@@ -40,6 +40,14 @@ Run the container and map a local directory (for files you amy want to use) and 
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest aws-shell
 ```
 
+#### aws-cdk mode
+
+Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
+
+```
+docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest cdk
+```
+
 #### bash mode
 
 Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
