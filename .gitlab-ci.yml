@@ -54,7 +54,7 @@ tag_gitlab:
   image: debian:stable-slim
   allow_failure: false
   script:
-    - apt get update && apt-get install -y curl git jq
+    - apt update && apt install -y curl git jq
     - "sh get_tags.sh"
     - export TAG=`cat latest` 
     - git tag -a '$TAG' -m 'Automated CLI build $TAG'
