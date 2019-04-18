@@ -54,11 +54,11 @@ tag_gitlab:
   image: debian:stable-slim
   allow_failure: true 
   before_script:
+    - apt update && apt install -y curl git jq
     - git config --global user.email '$GITLAB_USER_EMAIL'
     - git config --global user.name 'Ricbot_'
     - git remote add origin https://ric_harvey:'$CI_PUSH'@gitlab.com/ric_harvey/docker-aws-toolkit.git
   script:
-    - apt update && apt install -y curl git jq
     - "sh get_tags.sh"
     - export TAG=`cat latest` 
     - git tag -a '$TAG' -m 'Automated CLI build $TAG'
