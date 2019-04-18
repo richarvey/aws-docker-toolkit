@@ -23,8 +23,6 @@ build_latest:
 tag_gitlab:
   stage: tag_gitlab
   script:
-    - "sh build.sh"
+    - "sh get_tags.sh"
     - export TAG=`cat latest` 
-    - git tag -a '$TAG' -m 'Automated CLI build $TAG'
-    - git tag
-    - git push origin --tags
+    - "git tag -a $TAG -m Automated CLI build $TAG'"
