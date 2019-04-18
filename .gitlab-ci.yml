@@ -1,4 +1,3 @@
-image: docker:latest
 services:
   - docker:dind
 
@@ -7,15 +6,12 @@ stages:
   - container_scanning
   - tag_gitlab
 
-before_script:
-  - echo Logging in to $CI_REGISTRY...
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
-  - docker info | grep Registry
-
 build_latest:
+  image: docker:stable
   stage: build_latest
   allow_failure: false
   script:
+    - echo Logging in to $CI_REGISTRY...
     - apk add --update curl && apk add --update jq && rm -rf /var/cache/apk/*
     - "sh get_tags.sh"
     - "sh build.sh"
