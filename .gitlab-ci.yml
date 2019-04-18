@@ -52,7 +52,7 @@ container_scanning:
 tag_gitlab:
   stage: tag_gitlab
   image: debian:stable-slim
-  allow_failure: false
+  allow_failure: true 
   before_script:
     - git config --global user.email '$GITLAB_USER_EMAIL'
     - git config --global user.name 'Ricbot_'
