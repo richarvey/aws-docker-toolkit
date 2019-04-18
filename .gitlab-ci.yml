@@ -53,6 +53,10 @@ tag_gitlab:
   stage: tag_gitlab
   image: debian:stable-slim
   allow_failure: false
+  before_script:
+    - git config --global user.email '$GITLAB_USER_EMAIL'
+    - git config --global user.name 'Ricbot_'
+    - git remote add origin https://ric_harvey:'$CI_PUSH'@gitlab.com/ric_harvey/docker-aws-toolkit.git
   script:
     - apt update && apt install -y curl git jq
     - "sh get_tags.sh"
