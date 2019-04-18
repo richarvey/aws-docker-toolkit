@@ -4,6 +4,7 @@ services:
 
 stages:
   - build_latest
+  - container_scanning
   - tag_gitlab
 
 before_script:
@@ -13,6 +14,7 @@ before_script:
 
 build_latest:
   stage: build_latest
+  allow_failure: false
   script:
     - apk add --update curl && apk add --update jq && rm -rf /var/cache/apk/*
     - "sh get_tags.sh"
@@ -20,9 +22,42 @@ build_latest:
   only:
     - master
 
+container_scanning:
+  stage: container_scanning
+  image: docker:stable
+  variables:
+    DOCKER_DRIVER: overlay2
+    CI_APPLICATION_REPOSITORY: richarvey/awscli 
+    CI_APPLICATION_TAG: latest 
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - docker run -d --name db arminc/clair-db:latest
+    - docker run -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:v2.0.6
+    - apk add -U wget ca-certificates
+    - docker pull ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}
+    - wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
+    - mv clair-scanner_linux_amd64 clair-scanner
+    - chmod +x clair-scanner
+    - touch clair-whitelist.yml
+    - while( ! wget -q -O /dev/null http://docker:6060/v1/namespaces ) ; do sleep 1 ; done
+    - retries=0
+    - echo "Waiting for clair daemon to start"
+    - while( ! wget -T 10 -q -O /dev/null http://docker:6060/v1/namespaces ) ; do sleep 1 ; echo -n "." ; if [ $retries -eq 10 ] ; then echo " Timeout, aborting." ; exit 1 ; fi ; retries=$(($retries+1)) ; done
+    - ./clair-scanner -c http://docker:6060 --ip $(hostname -i) -r gl-container-scanning-report.json -l clair.log -w clair-whitelist.yml ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG} || true
+  artifacts:
+    reports:
+      container_scanning: gl-container-scanning-report.json
+
 tag_gitlab:
   stage: tag_gitlab
+  image: debian:stable-slim
+  allow_failure: false
   script:
+    - apt get update && apt-get install -y curl git jq
     - "sh get_tags.sh"
     - export TAG=`cat latest` 
-    - "git tag -a $TAG -m Automated CLI build $TAG'"
+    - git tag -a '$TAG' -m 'Automated CLI build $TAG'
+    - git tag
+    - git push origin --tags
