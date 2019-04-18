@@ -4,6 +4,7 @@ services:
 
 stages:
   - build_latest
+  - tag_gitlab
 
 before_script:
   - echo Logging in to $CI_REGISTRY...
@@ -18,3 +19,12 @@ build_latest:
     - "sh build.sh"
   only:
     - master
+
+tag_gitlab:
+  stage: tag_gitlab
+  script:
+    - "sh build.sh"
+    - export TAG=`cat latest` 
+    - git tag -a '$TAG' -m 'Automated CLI build $TAG'
+    - git tag
+    - git push origin --tags
