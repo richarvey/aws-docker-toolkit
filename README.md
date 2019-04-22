@@ -1,8 +1,10 @@
 ## AWS Toolkit ![pipeline status](https://gitlab.com/ric_harvey/docker-aws-toolkit/badges/master/pipeline.svg)
 
-Dockerised version of awscli and aws-shell which means you can run the tools without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is autobuilt twice daily to ensure alpine linux is constanstly updated in the background and that you have the latest awscli version. I recomend you use something like docker-puller to keep the image fresh on your machine.
+Dockerised version of awscli, aws-shell and aws-cdk which means you can run the tools without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is autobuilt twice daily to ensure alpine linux is constanstly updated in the background and that you have the latest awscli version.
 
-### Downloading
+I highly recomend you install the commands to __.bash_profile__ for ease of use.
+
+## Downloading
 
 ```
 docker pull richarvey/awscli:latest
@@ -10,39 +12,31 @@ docker pull richarvey/awscli:latest
 
 see all tags at [https://hub.docker.com/r/richarvey/awscli/tags/](https://hub.docker.com/r/richarvey/awscli/tags/)
 
-### Running 
+## Running the toolkit in sandbox mode
+Running in sandbox mode gives the CLI tools access to your current workign directory and your AWS credentials (potentially ~/.aws). Its controlled by specifying _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ on the command line. This will be the mode used in all the examples.
 
-#### cli mode
+## Running the toolkit in open mode
+To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials.
 
-Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
+#### Using the cli
+
+Run the container and map a local directory (for files you may want to use) and .aws config for credentials
 
 ```
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest aws ${COMMAND}
 ```
 
-You can set an alias and then use awscli as normal from your shell if desired:
+#### Using aws-shell
 
-```
-vi ~/.bash_profile
-```
-
-```
-aws() {
-  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest aws "$@";
-}
-```
-
-#### aws-shell mode
-
-Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
+Run the container and map a local directory (for files you may want to use) and .aws config for credentials
 
 ```
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest aws-shell
 ```
 
-#### aws-cdk mode
+#### Using aws-cdk
 
-Run the container and map a local directory (for files you amy want to use) and .aws config for credentials
+Run the container and map a local directory (for files you may want to use) and .aws config for credentials
 
 ```
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest cdk
@@ -56,7 +50,32 @@ Run the container and map a local directory (for files you amy want to use) and 
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest bash
 ```
 
-### Building yourself
+
+## Adding to .bash_profile
+
+You can set an alias and then use awscli as normal from your shell if desired, this makes it super easy to access.
+
+```
+vi ~/.bash_profile
+```
+
+```
+aws() {
+  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest aws "$@";
+}
+
+aws-shell() {
+  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest aws-shell "$@";
+}
+
+cdk() {
+  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest cdk "$@";
+}
+
+```
+
+
+## Building yourself
 
 First pull the latest tags for the awscli and aws-shell. You can do this by simply running the command:
 
@@ -67,8 +86,5 @@ First pull the latest tags for the awscli and aws-shell. You can do this by simp
 Now you can build by running:
 
 ```
-export VERSION=`cat latest`
-export SHELL_VERSION=`cat shell-latest`
-
-docker build --build-arg CLI_VERSION="${VERSION}" --build-arg SHELL_VERSION="${SHELL_VERSION}" -t "richarvey/awscli:${VERSION}"
+./build.sh
 ``` 
