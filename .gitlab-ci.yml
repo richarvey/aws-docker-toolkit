@@ -60,7 +60,5 @@ tag_gitlab:
     - git remote set-url origin https://ric_harvey:"$CI_PUSH"@gitlab.com/ric_harvey/docker-aws-toolkit.git
   script:
     - "sh get_tags.sh"
-    - export TAG=`cat latest` 
-    - git tag -a $TAG -m 'Automated CLI build $TAG'
-    - git tag
-    - git push origin --tags
+    - export TAG=`cat latest`
+    - if git rev-parse "$TAG" >/dev/null 2>&1; then echo "tag exists"; else git tag -a $TAG -m "Automated CLI build $TAG" && git tag && git push origin --tags; fi
