@@ -19,7 +19,11 @@ RUN apk update && \
     pip3 install aws-shell==${SHELL_VERSION} && \
     pip3 install boto && \
     pip3 install boto3 && \
+    npm config set unsafe-perm true && \
     npm install npm i -g aws-cdk@${CDK_VERSION}
+
+ADD signed_url /usr/bin/signed_url
+RUN chmod +x /usr/bin/signed_url
 
 WORKDIR /cfg
 ENV HOME=/home/awsuser
