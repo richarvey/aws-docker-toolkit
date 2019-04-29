@@ -16,7 +16,7 @@ see all tags at [https://hub.docker.com/r/richarvey/awscli/tags/](https://hub.do
 Running in sandbox mode gives the CLI tools access to your current workign directory and your AWS credentials (potentially ~/.aws). Its controlled by specifying _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ on the command line. This will be the mode used in all the examples.
 
 ## Running the toolkit in open mode
-To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials.
+To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials. _NOTE:_ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit.
 
 #### Using the cli
 
@@ -24,6 +24,12 @@ Run the container and map a local directory (for files you may want to use) and 
 
 ```
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest aws ${COMMAND}
+```
+
+Alternatively if you don't need the shell, CDK or bash mode and are happy with just the CLI there is a slim image:
+
+```
+docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:slim aws ${COMMAND}
 ```
 
 #### Using aws-shell
