@@ -17,6 +17,7 @@ RUN apk update && \
     adduser -D -u 1000 awsuser && \
     pip3 install awscli==${CLI_VERSION} && \
     pip3 install aws-shell==${SHELL_VERSION} && \
+    pip3 install argparse && \
     pip3 install boto && \
     pip3 install boto3 && \
     npm config set unsafe-perm true && \
