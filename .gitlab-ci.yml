@@ -21,7 +21,7 @@ build_latest:
   only:
     - master
 
-container_scanning:
+container_scanning-latest:
   stage: container_scanning
   image: docker:stable
   variables:
@@ -49,7 +49,7 @@ container_scanning:
     reports:
       container_scanning: gl-container-scanning-report.json
 
-container_scanning:
+container_scanning-slim:
   stage: container_scanning
   image: docker:stable
   variables:
