@@ -23,8 +23,11 @@ RUN apk update && \
     npm config set unsafe-perm true && \
     npm install npm i -g aws-cdk@${CDK_VERSION}
 
+
 ADD signed_url /usr/bin/signed_url
 RUN chmod +x /usr/bin/signed_url
+
+RUN echo ${CLI_VERSION} > /version
 
 WORKDIR /cfg
 ENV HOME=/home/awsuser

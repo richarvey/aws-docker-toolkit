@@ -1,6 +1,6 @@
 ## AWS Toolkit ![pipeline status](https://gitlab.com/ric_harvey/docker-aws-toolkit/badges/master/pipeline.svg)
 
-Dockerised version of awscli, aws-shell and aws-cdk which means you can run the tools without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is autobuilt twice daily to ensure alpine linux is constanstly updated in the background and that you have the latest awscli version.
+Dockerised version of awscli, aws-shell and aws-cdk which means you can run the tools without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is autobuilt twice daily to ensure alpine linux is constanstly updated in the background and that you have the latest awscli version. There are two versions of the toolkit the full one (:latest or :1.xx.xx) which is about ~92Mb or the slim version (:slim or :1.xx.xx-slim) which is ~42Mb and only includes the aws cli.
 
 I highly recomend you install the commands to __.bash_profile__ for ease of use.
 
@@ -56,8 +56,32 @@ Run the container and map a local directory (for files you amy want to use) and 
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest bash
 ```
 
+#### signed_url
 
-## Adding to .bash_profile
+Its sometimes useful to be able to generate signed URL's fromt he command line so I've installed a small script that can do just that. Just pass it your details and it will return a signed_url, the default time expiry time is 5 mins (300 seconds).
+
+```
+docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest /usr/bin/signed_url
+
+usage: signed_url [-h] -b BUCKET -o OBJECT [-t TIME]
+signed_url: error: the following arguments are required: -b/--bucket, -o/--object
+```
+
+#### Upgrading
+
+Install the bash_profile and run the command:
+
+```
+aws_update latest
+```
+
+or
+
+```
+aws_update slim
+```
+
+## Adding to .bash_profile for :latest
 
 You can set an alias and then use awscli as normal from your shell if desired, this makes it super easy to access.
 
@@ -78,6 +102,47 @@ cdk() {
   docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest cdk "$@";
 }
 
+signed_url() {
+  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest signed_url "$@";
+}
+
+aws_update() {
+  export FLAVOUR=$1
+  export VERSION=`docker run richarvey/awscli:latest cat /version`
+  export CURRENT=`curl -s https://gitlab.com/api/v4/projects/11226436/repository/tags/ | jq .[0].name | sed -e s/\"//g`
+
+  if [ ${VERSION} == ${CURRENT} ]; then
+    echo "AWS CLI upto date"
+  else
+    echo "Updating AWS CLI"
+    docker rmi -f richarvey/awscli:${FLAVOUR}
+    docker pull richarvey/awscli:${FLAVOUR}
+  fi
+}
+```
+
+## Adding to .bash_profile for :slim
+
+You'll just need thetwo commands if you are using the slim version
+
+```
+aws() {
+  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest aws "$@";
+}
+
+aws_update() {
+  export FLAVOUR=$1
+  export VERSION=`docker run richarvey/awscli:latest cat /version`
+  export CURRENT=`curl -s https://gitlab.com/api/v4/projects/11226436/repository/tags/ | jq .[0].name | sed -e s/\"//g`
+
+  if [ ${VERSION} == ${CURRENT} ]; then
+    echo "AWS CLI upto date"
+  else
+    echo "Updating AWS CLI"
+    docker rmi -f richarvey/awscli:${FLAVOUR}
+    docker pull richarvey/awscli:${FLAVOUR}
+  fi
+}
 ```
 
 

@@ -13,6 +13,8 @@ RUN apk update && \
     adduser -D -u 1000 awsuser && \
     pip3 install awscli==${CLI_VERSION} 
 
+RUN echo ${CLI_VERSION} > /version
+
 WORKDIR /cfg
 ENV HOME=/home/awsuser
 USER awsuser
