@@ -1,5 +1,5 @@
 services:
-  - docker:dind
+  - docker:test-dind
 
 stages:
   - build_latest
