@@ -10,6 +10,8 @@ if [ ${latest} == "200" ]; then
     exit 0
 else
     echo "Building: awscli"
+    docker version
+    docker buildx ls
     docker buildx create --name aws-toolkit-builder
     docker use aws-toolkit-builder
 #    docker build --build-arg CLI_VERSION="${VERSION}" --build-arg SHELL_VERSION="${SHELL_VERSION}" --build-arg CDK_VERSION="${CDK_VERSION}" -t "richarvey/awscli:${VERSION}" . && \ 
