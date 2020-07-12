@@ -1,36 +1,45 @@
-FROM alpine:latest
+FROM debian:buster as build
 MAINTAINER ric@ngd.io
 
-ARG CLI_VERSION
-ARG SHELL_VERSION
-ARG CDK_VERSION
-
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache --update \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
     groff \
     less \
-    bash \
-    npm \
-    python3 && \
-    pip3 install --upgrade pip && \
-    adduser -D -u 1000 awsuser && \
-    pip3 install awscli==${CLI_VERSION} && \
-    pip3 install aws-shell==${SHELL_VERSION} && \
-    pip3 install argparse && \
-    pip3 install boto && \
-    pip3 install boto3 && \
-    npm config set unsafe-perm true && \
-    npm install npm i -g aws-cdk@${CDK_VERSION}
+    curl \
+    unzip
 
+RUN ARCH=`uname -m` && \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-$ARCH.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip &&\
+    ./aws/install --bin-dir /aws-cli-bin && \
+    mkdir /cfg
 
-ADD signed_url /usr/bin/signed_url
-RUN chmod +x /usr/bin/signed_url
+# Now copy it into our base image.
+FROM debian:buster-slim
 
-RUN echo ${CLI_VERSION} > /version
+# Copy less and groff
+COPY --from=build /usr/lib/groff  /usr/lib/groff
+COPY --from=build /usr/share/groff /usr/share/groff
+COPY --from=build /usr/bin/groff /usr/bin/groff
+COPY --from=build /etc/groff /etc/groff
+COPY --from=build /usr/bin/grotty /usr/bin/grotty
+COPY --from=build /usr/bin/troff /usr/bin/troff
+COPY --from=build /usr/lib/mime/packages/less /usr/lib/mime/packages/less
+COPY --from=build /usr/bin/less /usr/bin/less
+
+# Copy aws tooling and directories
+
+COPY --from=build /usr/local/aws-cli /usr/local/aws-cli
+COPY --from=build /aws-cli-bin /usr/local/bin
+COPY --from=build /cfg /cfg
+
+RUN adduser -D -u 1000 awsuser && \
+    aws --version > /version
 
 WORKDIR /cfg
 ENV HOME=/home/awsuser
 USER awsuser
 
-CMD ["/usr/bin/aws"]
+ENTRYPOINT ["/usr/local/bin/aws"]
+
