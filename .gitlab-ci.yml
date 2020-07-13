@@ -8,9 +8,11 @@ stages:
   - tag_gitlab
 
 build_latest:
-  image: docker:git
-  command: ["--experimental"]
   stage: build_latest
+  image: docker:git
+  services:
+  - name: docker:test-dind
+    command: ["--experimental"]
   allow_failure: false
   before_script:
     - echo Logging in to $CI_REGISTRY...
