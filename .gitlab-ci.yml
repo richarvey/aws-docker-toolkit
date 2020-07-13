@@ -1,5 +1,5 @@
 services:
-  - docker:dind
+  - docker:test-dind
 
 stages:
   - build_latest
@@ -7,7 +7,7 @@ stages:
   - tag_gitlab
 
 build_latest:
-  image: docker:stable
+  image: docker:test
   stage: build_latest
   allow_failure: false
   before_script:
