@@ -7,7 +7,7 @@ stages:
   - tag_gitlab
 
 build_latest:
-  image: docker:test
+  image: docker:git
   stage: build_latest
   allow_failure: false
   before_script:
