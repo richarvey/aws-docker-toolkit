@@ -9,6 +9,7 @@ stages:
 
 build_latest:
   image: docker:git
+  command: ["--experimental"]
   stage: build_latest
   allow_failure: false
   before_script:
