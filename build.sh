@@ -4,6 +4,8 @@ export VERSION=`cat latest`
 export latest=`curl -Is https://hub.docker.com/v2/repositories/richarvey/awscli/tags/$(cat latest)/ | head -n 1|cut -d$' ' -f2`
 
 # Set up environment
+docker version
+docker buildx ls
 docker buildx create --name awsclibuilder
 docker buildx use awsclibuilder
 
