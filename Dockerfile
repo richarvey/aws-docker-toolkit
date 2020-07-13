@@ -11,7 +11,7 @@ RUN apt-get update && \
 
 RUN ARCH=`uname -m` && \
     curl "https://awscli.amazonaws.com/awscli-exe-linux-$ARCH.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip &&\
+    unzip awscliv2.zip && \
     ./aws/install --bin-dir /aws-cli-bin && \
     mkdir /cfg
 
@@ -34,7 +34,7 @@ COPY --from=build /usr/local/aws-cli /usr/local/aws-cli
 COPY --from=build /aws-cli-bin /usr/local/bin
 COPY --from=build /cfg /cfg
 
-RUN adduser -D -u 1000 awsuser && \
+RUN adduser -u 1000 awsuser && \
     aws --version > /version
 
 WORKDIR /cfg
