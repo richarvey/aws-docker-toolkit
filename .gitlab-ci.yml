@@ -2,6 +2,7 @@ services:
   - name: docker:dind
 
 stages:
+  - buildx
   - build_latest
   - container_scanning
   - tag_gitlab
@@ -35,8 +36,8 @@ build_latest:
     - mv buildx ~/.docker/cli-plugins/docker-buildx
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - echo Logging in to $CI_REGISTRY...
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
   script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
     - apk add --update curl && apk add --update jq && rm -rf /var/cache/apk/*
     - "sh get_tags.sh"
     - "sh build.sh"
