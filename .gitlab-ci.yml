@@ -6,20 +6,36 @@ stages:
   - container_scanning
   - tag_gitlab
 
+buildx:
+  image: docker:19.03-git
+  stage: buildx
+  variables:
+    GIT_STRATEGY: none
+  artifacts:
+    paths:
+      - buildx
+    expire_in: 1 hour
+  services:
+    - docker:19.03-dind
+  script:
+    - export DOCKER_BUILDKIT=1
+    - git clone git://github.com/docker/buildx ./docker-buildx
+    - docker build --platform=local -o . ./docker-buildx
+
 build_latest:
   stage: build_latest
   image: docker:19.03-git
-  services:
-    - docker:19.03-dind
   allow_failure: false
+  services:
+    - name: docker:19.03-dind
+      command: ["--experimental"]
   before_script:
-    - apk update && apk add git
+    - echo Setting up buildx...
+    - mkdir -p ~/.docker/cli-plugins
+    - mv buildx ~/.docker/cli-plugins/docker-buildx
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - echo Logging in to $CI_REGISTRY...
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
-    - export DOCKER_CLI_EXPERIMENTAL=enabled
-    - export DOCKER_BUILDKIT=1
-    - docker build --platform=local -o . git://github.com/docker/buildx
-    - mv buildx ~/.docker/cli-plugins/docker-buildx
   script:
     - apk add --update curl && apk add --update jq && rm -rf /var/cache/apk/*
     - "sh get_tags.sh"
