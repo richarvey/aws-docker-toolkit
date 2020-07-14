@@ -13,6 +13,7 @@ build_latest:
     - docker:19.03-dind
   allow_failure: false
   before_script:
+    - apt update && apt install -y git
     - echo Logging in to $CI_REGISTRY...
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
     - export DOCKER_CLI_EXPERIMENTAL=enabled
