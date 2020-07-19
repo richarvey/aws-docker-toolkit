@@ -24,7 +24,7 @@ Running in the normal mode gives the CLI tools access to your current working di
 ## Running the toolkit in open mode
 To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials.
 
-_NOTE:_ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit.
+__NOTE:__ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit.
 
 #### Using the cli
 
