@@ -1,7 +1,6 @@
 FROM debian:buster as build
 LABEL maintainer="ric@ngd.io"
 
-
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \

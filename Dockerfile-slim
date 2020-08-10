@@ -1,4 +1,5 @@
 FROM debian:buster as build-slim
+LABEL maintainer="ric@ngd.io"
 
 RUN apt update && \
     apt upgrade -y && \
