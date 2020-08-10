@@ -1,5 +1,6 @@
 FROM debian:buster as build
-MAINTAINER ric@ngd.io
+LABEL maintainer="ric@ngd.io"
+
 
 RUN apt-get update && \
     apt-get upgrade -y && \
