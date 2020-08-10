@@ -1,10 +1,14 @@
 ## AWS Toolkit
 
+[![pipeline status](https://gitlab.com/ric_harvey/docker-aws-toolkit/badges/master/pipeline.svg)](https://gitlab.com/ric_harvey/docker-aws-toolkit/-/commits/master)
+
 This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is auto built twice daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version. There are two versions of the toolkit the full one (:latest or :2.x.x) which is about ~178Mb or the slim version (:slim or :2.x.x-slim) which is ~107Mb and only includes the awscli with no acess to the help docs (be warned)! At this time slim is only available on amd64 until I fix the build script.
 
 ### Why does this version exist?
 
 Amazon provide a container for this already, its good but it weighed in a little heavy for me at ~281MB. I wanted this as small as possibe and managed to shave off 102MB on the uncompressed image. Why else? Well I've been doing this since version 1.6.x and I trust my image builds, I know they are lightweight and no bloat. Latest is based on debian:buster-slim and slim is based on busybox:latest.
+
+The build pipeline for these containers is also passed through [clair](https://github.com/quay/clair) to scan for CVE issues before being published. So these images are tested to be secure.
 
 ## Downloading
 
@@ -18,9 +22,9 @@ See all tags at [https://hub.docker.com/r/richarvey/awscli/tags/](https://hub.do
 Running in the normal mode gives the CLI tools access to your current working directory and your AWS credentials (potentially ~/.aws). Its controlled by specifying _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ on the command line. This will be the mode used in all the examples. This is great for limiting the reach of the toolkit onto your system. You'll share your AWS credentials and the current working directory so you can use the cloudformation file you've been working on or tell S3 to upload/download files.
 
 ## Running the toolkit in open mode
-To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials. 
+To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials.
 
-_NOTE:_ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit.
+__NOTE:__ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit.
 
 #### Using the cli
 
@@ -50,7 +54,7 @@ aws() {
 }
 ```
 
-_NOTE:_ to use the slim version swap __awscli:latest__ for __awscli:slim__
+__NOTE:__ to use the slim version swap _awscli:latest_ for _awscli:slim_
 
 ## Building yourself
 
@@ -64,6 +68,6 @@ Now you can build by running:
 
 ```
 docker build -t MYBUILD .
-``` 
+```
 
-_NOTE:_ __./build.sh__ uses dockers buildx to build amd64 and aarch64 and push to my repo so you'll need to tweak it for your username
+__NOTE:__ _./build.sh_ uses dockers _buildx_ to build amd64 and aarch64 and push to my repo so you'll need to tweak it for your username
