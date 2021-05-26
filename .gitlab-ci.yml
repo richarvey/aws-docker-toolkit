@@ -42,7 +42,7 @@ build_latest:
     - "sh get_tags.sh"
     - "sh build.sh"
   only:
-    - master
+    - main
 
 container_scanning-latest:
   stage: container_scanning
