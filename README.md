@@ -1,7 +1,5 @@
 ## AWS Toolkit
 
-[![pipeline status](https://gitlab.com/ric_harvey/docker-aws-toolkit/badges/main/pipeline.svg)](https://gitlab.com/ric_harvey/docker-aws-toolkit/-/commits/main)
-
 This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is auto built twice daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version. There are two versions of the toolkit the full one (:latest or :2.x.x) which is about ~178Mb or the slim version (:slim or :2.x.x-slim) which is ~107Mb and only includes the awscli with no acess to the help docs (be warned)! At this time slim is only available on amd64 until I fix the build script.
 
 ### Why does this version exist?
