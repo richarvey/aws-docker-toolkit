@@ -38,8 +38,8 @@ jobs:
         run: |
           echo "Getting all releases"
           curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest
-        
-          export latest_tag=`cat latest`
+        tags: |
+          type=semver,pattern={{`cat latest`}}
       -
         name: Build and push
         id: docker_build
@@ -47,7 +47,7 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: richarvey/awscli:latest, richarvey/awscli:${{ latest_tag }}
+          tags: richarvey/awscli:latest, richarvey/awscli:${{ steps.get_tags.outputs.tags }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
