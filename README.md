@@ -1,12 +1,12 @@
 ## AWS Toolkit
 
-This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is auto built twice daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version. There are two versions of the toolkit the full one (:latest or :2.x.x) which is about ~178Mb or the slim version (:slim or :2.x.x-slim) which is ~107Mb and only includes the awscli with no acess to the help docs (be warned)! At this time slim is only available on amd64 until I fix the build script.
+This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is auto built daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version. There are two versions of the toolkit the full one (:latest or :2.x.x) which is about ~178Mb or the slim version (:slim or :2.x.x-slim) which is ~107Mb and only includes the awscli with no acess to the help docs (be warned)! At this time slim is only available on amd64 until I fix the build script.
+
+Tags and releases are inline with the AWS CLI version, so you can use that to pull a specific release if needed.
 
 ### Why does this version exist?
 
 Amazon provide a container for this already, its good but it weighed in a little heavy for me at ~281MB. I wanted this as small as possibe and managed to shave off 102MB on the uncompressed image. Why else? Well I've been doing this since version 1.6.x and I trust my image builds, I know they are lightweight and no bloat. Latest is based on debian:buster-slim and slim is based on busybox:latest.
-
-The build pipeline for these containers is also passed through [clair](https://github.com/quay/clair) to scan for CVE issues before being published. So these images are tested to be secure.
 
 ## Downloading
 
