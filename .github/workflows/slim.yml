@@ -1,0 +1,64 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  schedule:
+    - cron: '23 18 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Get Version Tags
+        id: get_tags
+        run: |
+          echo "Getting all releases"
+          curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest
+          echo "Latest Version = `cat latest`"
+          echo "latest_version=`cat latest`" >> $GITHUB_ENV
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: Dockerfile-slim
+          platforms: linux/amd64
+          tags: richarvey/awscli:slim, richarvey/awscli:${{ env.latest_version }}-slim
+      - 
+        name: Tag_Release_Github
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ env.latest_version }}-slim
+          prerelease: false
+          title: ${{ env.latest_version }}-slim
+          files: |
+            *
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
