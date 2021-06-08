@@ -18,6 +18,12 @@ RUN ARCH=`uname -m` && \
 # Now copy it into our base image.
 FROM debian:buster-slim
 
+# Update and tidy up slim image.
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy less and groff
 COPY --from=build /usr/lib/groff  /usr/lib/groff
 COPY --from=build /usr/share/groff /usr/share/groff
