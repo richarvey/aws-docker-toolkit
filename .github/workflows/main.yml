@@ -35,7 +35,12 @@ jobs:
       -
         name: Get Version Tags
         id: get_tags
-        run: echo "Getting all releases" && curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest && cat latest >> $latest_tag
+        run: |
+        
+        echo "Getting all releases"
+        curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest
+        
+        export latest_tag=`cat latest`
       -
         name: Build and push
         id: docker_build
