@@ -33,14 +33,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Get Version Tags
+        id: get_tags
+         run:   echo "Getting all releases" && curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest && cat latest >> $latest_tag
+      -
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
-        run:   echo "Getting all releases" && curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest && export version=`cat latest`
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: richarvey/awscli:latest,richarvey/awscli:${{ latest }}
+          tags: richarvey/awscli:latest,richarvey/awscli:${{ latest_tag }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
