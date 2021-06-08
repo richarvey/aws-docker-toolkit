@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "Getting all releases"
           curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest
-          export tags=`cat latest`
+          echo "latest_version=`cat latest`" >> $GITHUB_ENV
       -
         name: Build and push
         id: docker_build
@@ -46,7 +46,7 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: richarvey/awscli:latest, richarvey/awscli:${{ tags }}
+          tags: richarvey/awscli:latest, richarvey/awscli:${{ env.latest_version }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
