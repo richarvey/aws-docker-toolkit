@@ -56,7 +56,7 @@ COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=installer /aws-cli-bin/ /usr/local/bin/
 
 RUN adduser -D -u 1000 awsuser && \
-    aws --version > /version && mkdir
+    aws --version > /version
 
 WORKDIR /cfg
 ENV HOME=/home/awsuser
