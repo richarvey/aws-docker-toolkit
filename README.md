@@ -1,4 +1,4 @@
-## AWS Toolkit
+## AWS Toolkit  -  [![CI](https://github.com/WAOptics/aws-docker-toolkit/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/WAOptics/aws-docker-toolkit/actions/workflows/main.yml) [![scan](https://github.com/WAOptics/aws-docker-toolkit/actions/workflows/trivy-analysis.yml/badge.svg?branch=main)](https://github.com/WAOptics/aws-docker-toolkit/actions/workflows/trivy-analysis.yml)
 
 This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type ```aws``` in the command line. The image is auto built daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version.
 
