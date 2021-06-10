@@ -15,7 +15,7 @@ Amazon provide a container for this already, its good but it weighed in a little
 | amazon/aws-cli      | latest          | amazon linux | 387Mb                |
 | richarvey/awscli    | latest,2.2.10+  | alpine linux | 97.6Mb               |        
 
-#### Why else?
+**Why else?**
 
 Well I've been doing this since version 1.6.x and I trust my image builds, I know they are lightweight and no bloat. switching from debian-slim to linux has allowed me to make this even smaller so I'm super happy with that. 
 
