@@ -21,7 +21,7 @@ Well I've been doing this since version 1.6.x and I trust my image builds, I kno
 
 ## Downloading
 
-```
+```bash
 docker pull richarvey/awscli:latest
 ```
 
@@ -39,7 +39,7 @@ __NOTE:__ I recommend running these as bash alias' in order to make its a smooth
 
 Run the container and map a local directory (for files you may want to use) and .aws config for credentials
 
-```
+```bash
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest ${COMMAND}
 ```
 
@@ -47,11 +47,11 @@ docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:lates
 
 You can set an alias and then use awscli as normal from your shell if desired, this makes it super easy to access.
 
-```
+```bash
 vi ~/.bash_profile
 ```
 
-```
+```bash
 aws() {
   docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest "$@";
 }
@@ -63,6 +63,6 @@ Now when you call ```aws``` from the command line (don't forget to source your b
 
 The build process is now super simple and you can build using the normal docker tools:
 
-```
+```bash
 docker build -t MYBUILD .
 ```
