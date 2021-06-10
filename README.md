@@ -1,12 +1,23 @@
 ## AWS Toolkit
 
-This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type aws in the command line. The image is auto built daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version. There are two versions of the toolkit the full one (:latest or :2.x.x) which is about ~178Mb or the slim version (:slim or :2.x.x-slim) which is ~107Mb and only includes the awscli with no acess to the help docs (be warned)! At this time slim is only available on amd64 until I fix the build script.
+This is dockerised version of the awscli, which means you can run the tool without directly installing on your system. Its simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type ```aws``` in the command line. The image is auto built daily to ensure the linux base image is constanstly updated in the background and that you have the latest awscli version.
 
-Tags and releases are inline with the AWS CLI version, so you can use that to pull a specific release if needed.
+I've finally made a unified version which is super slim and from version ```2.2.10``` it's a mere 97.6Mb and is based upon alpine linux (yes all the musl libc and openssl issues are taken care of) add to this it is available on both x86_64 and arm64.
+
+Tags and releases are inline with the AWS CLI version, so you can use that to pull a specific release if needed for example: ```2.2.6```
 
 ### Why does this version exist?
 
-Amazon provide a container for this already, its good but it weighed in a little heavy for me at ~281MB. I wanted this as small as possibe and managed to shave off 102MB on the uncompressed image. Why else? Well I've been doing this since version 1.6.x and I trust my image builds, I know they are lightweight and no bloat. Latest is based on debian:buster-slim and slim is based on busybox:latest.
+Amazon provide a container for this already, its good but it weighed in a little heavy for me at ~387MB. I wanted this as small as possibe and managed to shave off ~290MB on the uncompressed image.
+
+|Image                | Version         | Base         | Size (uncomnpressed) |
+|---------------------|-----------------|--------------|----------------------|
+| amazon/aws-cli      | latest          | amazon linux | 387Mb                |
+| richarvey/awscli    | latest,2.2.10+  | alpine linux | 97.6Mb               |        
+
+#### Why else?
+
+Well I've been doing this since version 1.6.x and I trust my image builds, I know they are lightweight and no bloat. switching from debian-slim to linux has allowed me to make this even smaller so I'm super happy with that. 
 
 ## Downloading
 
@@ -22,7 +33,7 @@ Running in the normal mode gives the CLI tools access to your current working di
 ## Running the toolkit in open mode
 To give you more access to files ouside your current working directory you can swap _-v \`pwd\`:/cfg -v ~/.aws:/home/awsuser/.aws_ for ___-v ~/:/home/awsuser___. This give docker access to your entire home directory including your docker credentials.
 
-__NOTE:__ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit.
+__NOTE:__ I recommend running these as bash alias' in order to make its a smooth process of using this toolkit and save a lot of typing.
 
 #### Using the cli
 
@@ -30,12 +41,6 @@ Run the container and map a local directory (for files you may want to use) and 
 
 ```
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest ${COMMAND}
-```
-
-Alternatively if you don't need the help files and want a super lightweight version:
-
-```
-docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:slim ${COMMAND}
 ```
 
 ## Adding to .bash_profile for :latest
@@ -52,20 +57,12 @@ aws() {
 }
 ```
 
-__NOTE:__ to use the slim version swap _awscli:latest_ for _awscli:slim_
+Now when you call ```aws``` from the command line (don't forget to source your bash_profile) you'll have direct access to the aws comand as if it were installed on your system. 
 
 ## Building yourself
 
-First pull the latest tags for the awscli and aws-shell. You can do this by simply running the command:
-
-```
-./get-tags.sh
-```
-
-Now you can build by running:
+The build process is now super simple and you can build using the normal docker tools:
 
 ```
 docker build -t MYBUILD .
 ```
-
-__NOTE:__ _./build.sh_ uses dockers _buildx_ to build amd64 and aarch64 and push to my repo so you'll need to tweak it for your username
