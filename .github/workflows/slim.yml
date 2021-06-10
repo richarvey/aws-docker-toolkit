@@ -49,16 +49,6 @@ jobs:
           file: Dockerfile-slim
           platforms: linux/amd64
           tags: richarvey/awscli:slim, richarvey/awscli:${{ env.latest_version }}-slim
-      - 
-        name: Tag_Release_Github
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ env.latest_version }}-slim
-          prerelease: false
-          title: ${{ env.latest_version }}-slim
-          files: |
-            *
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
