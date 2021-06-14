@@ -1,11 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: build 
 
 # Controls when the action will run. 
 on:
   schedule:
-    - cron: '33 13 * * *'
+    - cron: '33 13 * * 1-5'
   push:
     branches: [ main ]
     # Publish semver tags as releases.
@@ -17,7 +17,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker:
+  scan:
+    name: Scan
+    runs-on: "ubuntu-18.04"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t docker.io/richarvey/awscli:latest .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'docker.io/richarvey/awscli:latest'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
+  build:
+    name: Build
+    needs: scan
     runs-on: ubuntu-latest
     steps:
       -
