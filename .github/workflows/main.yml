@@ -59,6 +59,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Get Version Tags
+        id: get_tags
+        run: |
+          echo "Getting all releases"
+          curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest
+          echo "Latest Version = `cat latest`"
+          echo "latest_version=`cat latest`" >> $GITHUB_ENV
+      -
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
