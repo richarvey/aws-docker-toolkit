@@ -73,6 +73,7 @@ jobs:
     name: Tag 
     needs: build 
     runs-on: ubuntu-latest
+    steps:
       -
         name: Get Version Tags
         id: get_tags
