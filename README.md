@@ -12,6 +12,7 @@ Amazon provides a container for this already, it's good but it weighed in a litt
 |Image                | Version         | Base         | Size (uncomnpressed) |
 |---------------------|-----------------|--------------|----------------------|
 | amazon/aws-cli      | latest          | amazon linux | 387Mb                |
+| richarvey/awscli    | < 2.2.9         | debian slim  | ~178MB               | 
 | richarvey/awscli    | latest,2.2.10+  | alpine linux | 97.6Mb               |        
 
 __Why else?__
