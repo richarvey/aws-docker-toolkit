@@ -66,9 +66,13 @@ jobs:
           curl https://api.github.com/repos/aws/aws-cli/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > latest
           echo "Latest Version = `cat latest`"
           echo "latest_version=`cat latest`" >> $GITHUB_ENV
+          curl https://api.github.com/repos/WAOptics/aws-docker-toolkit/tags | jq -r .[].name | grep -v dev > releases && cat releases | head -n1 > local_version
+          echo "local_version"=`cat local_version` >> $GITHUB_ENV
+          if [ $local_version != $latest ]; then echo "build"="true" >> $GITHUB_ENV; else echo "build"="false" >> $GITHUB_ENV;  fi
       -
         name: Build and push
         id: docker_build
+        if: ${{ env.build == 'true' }}
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -76,6 +80,7 @@ jobs:
           tags: richarvey/awscli:latest, richarvey/awscli:${{ env.latest_version }}
       -
         name: Image digest
+        if: ${{ env.build == 'true' }}
         run: echo ${{ steps.docker_build.outputs.digest }}
   tag: 
     name: Tag 
