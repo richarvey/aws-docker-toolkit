@@ -41,7 +41,7 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          echo ${{ env.build }}
+          echo Latest Version = $latest_version
           docker build -t docker.io/richarvey/awscli:latest .
 
       - name: Run Trivy vulnerability scanner
@@ -59,7 +59,7 @@ jobs:
           sarif_file: 'trivy-results.sarif'
   build:
     name: Build
-    needs: scan
+    needs: checkTags
     runs-on: ubuntu-latest
     steps:
       -
