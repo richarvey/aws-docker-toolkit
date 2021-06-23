@@ -33,6 +33,7 @@ jobs:
           if [ $local_version != $latest_version ]; then echo "build"="true" >> $GITHUB_ENV; else echo "build"="false" >> $GITHUB_ENV;  fi
   scan:
     name: Scan
+    needs: checkTags
     runs-on: "ubuntu-18.04"
     steps:
       - name: Checkout code
@@ -40,7 +41,7 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          echo ${{ env.local_version }}
+          echo ${{ env.build }}
           docker build -t docker.io/richarvey/awscli:latest .
 
       - name: Run Trivy vulnerability scanner
@@ -77,13 +78,14 @@ jobs:
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
-        if: ${{ env.build == 'true' }}
+        if: ${{ env.build == "true" }}
         with:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: richarvey/awscli:latest, richarvey/awscli:${{ env.latest_version }}
       -
         name: Image digest
+        if: ${{ env.build == "true" }}
         run: echo ${{ steps.docker_build.outputs.digest }}
   tag: 
     name: Tag 
