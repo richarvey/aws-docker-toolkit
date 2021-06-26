@@ -30,7 +30,7 @@ jobs:
           curl https://api.github.com/repos/WAOptics/aws-docker-toolkit/tags | jq -r '.[0].name' | grep -v dev > releases && cat releases | head -n1 > local_version
           echo "Local Version = `cat local_version`"
           echo "local_version =`cat local_version`" >> $GITHUB_ENV
-          if [ $local_version != $latest_version ]; then echo "build=true" >> $GITHUB_ENV; else echo "build=false" >> $GITHUB_ENV;  fi
+          if [ $local_version != $latest_version ]; then echo "build = true" >> $GITHUB_ENV; else echo "build = false" >> $GITHUB_ENV;  fi
   scan:
     name: Scan
     needs: checkTags
@@ -41,7 +41,8 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          echo Latest Version = $latest_version
+          echo Latest Version = ${latest_version}
+          rcho Build Status = ${build}
           docker build -t docker.io/richarvey/awscli:latest .
 
       - name: Run Trivy vulnerability scanner
