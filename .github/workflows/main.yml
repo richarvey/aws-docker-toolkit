@@ -29,7 +29,7 @@ jobs:
           echo "latest_version=`cat latest`" >> $GITHUB_ENV
           curl https://api.github.com/repos/WAOptics/aws-docker-toolkit/tags | jq -r '.[0].name' | grep -v dev > releases && cat releases | head -n1 > local_version
           echo "Local Version = `cat local_version`"
-          echo "local_version"=`cat local_version` >> $GITHUB_ENV
+          echo "local_version =`cat local_version`" >> $GITHUB_ENV
           if [ $local_version != $latest_version ]; then echo "build=true" >> $GITHUB_ENV; else echo "build=false" >> $GITHUB_ENV;  fi
   scan:
     name: Scan
