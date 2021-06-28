@@ -104,8 +104,8 @@ jobs:
         if: ${{ needs.checkTags.outputs.build }} == "true"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ needs.checkTags.outputs.latest_version }}
+          automatic_release_tag: "${{ needs.checkTags.outputs.latest_version }}"
           prerelease: false
-          title: ${{ needs.checkTags.outputs.latest_version }}
+          title: "${{ needs.checkTags.outputs.latest_version }}"
           files: |
             *
