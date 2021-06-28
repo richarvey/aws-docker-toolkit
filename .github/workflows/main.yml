@@ -68,7 +68,7 @@ jobs:
     needs: checkTags
     runs-on: ubuntu-latest
     outputs:
-      latest_version: ${{ steps.latestTags.outputs.latest_version }}
+      latest_version: ${{ steps.latestTag.outputs.latest_version }}
     steps:
       -
         name: Set up QEMU
