@@ -47,8 +47,8 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          echo Latest Version = ${{ needs.getTags.outputs.latest_version }}
-          echo Build Status = ${{ needs.getTags.outputs.build }}
+          echo Latest Version = ${{ needs.checkTags.outputs.latest_version }}
+          echo Build Status = ${{ needs.checkTags.outputs.build }}
           docker build -t docker.io/richarvey/awscli:latest .
 
       - name: Run Trivy vulnerability scanner
@@ -85,11 +85,11 @@ jobs:
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
-        if: ${{ needs.getTags.outputs.build }} == "true"
+        if: ${{ needs.checkTags.outputs.build }} == "true"
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: richarvey/awscli:latest, richarvey/awscli:${{ needs.getTags.outputs.latest_version }}
+          tags: richarvey/awscli:latest, richarvey/awscli:${{ needs.checkTags.outputs.latest_version }}
       -
         name: Image digest
         if: ${{ env.build == 'true' }}
@@ -102,11 +102,11 @@ jobs:
       -
         name: Tag Release
         uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ needs.getTags.outputs.build }} == "true"
+        if: ${{ needs.checkTags.outputs.build }} == "true"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ needs.getTags.outputs.latest_version }}
+          automatic_release_tag: ${{ needs.checkTags.outputs.latest_version }}
           prerelease: false
-          title: ${{ needs.getTags.outputs.latest_version }}
+          title: ${{ needs.checkTags.outputs.latest_version }}
           files: |
             *
