@@ -67,6 +67,8 @@ jobs:
     name: Build
     needs: checkTags
     runs-on: ubuntu-latest
+    outputs:
+      latest_version: ${{ steps.latestTags.outputs.latest_version }}
     steps:
       -
         name: Set up QEMU
@@ -80,6 +82,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Validate Build
+        id: latestTag
+        if: ${{ needs.checkTags.outputs.build }} == "true"
+        run:
+	  echo Building Version ${{ needs.checkTags.outputs.latest_version }}
+          echo ${{ needs.checkTags.outputs.latest_version }} > latest  
+          echo "::set-output name=latest_version::`cat latest`"
       -
         name: Build and push
         id: docker_build
@@ -106,6 +116,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ needs.checkTags.outputs.latest_version }}"
           prerelease: false
-          title: "${{ needs.checkTags.outputs.latest_version }}"
+          title: "${{ needs.build.outputs.latest_version }}"
           files: |
             *

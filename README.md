@@ -9,11 +9,11 @@ Tags and releases are in line with the AWS CLI version, so you can use that to p
 
 Amazon provides a container for this already, it's good but it weighed in a little heavy for me at ~387MB. I wanted this as small as possible and managed to shave off ~290MB on the uncompressed image.
 
-|Image                | Version         | Base         | Size (uncomnpressed) |
-|---------------------|-----------------|--------------|----------------------|
-| amazon/aws-cli      | latest          | amazon linux | 387Mb                |
-| richarvey/awscli    | < 2.2.9         | debian slim  | ~178MB               | 
-| richarvey/awscli    | latest,2.2.10+  | alpine linux | 97.6Mb               |        
+|Image                | Version         | Base         | Size (uncomnpressed) | Size (compressed) |
+|---------------------|-----------------|--------------|----------------------|-------------------|
+| amazon/aws-cli      | latest          | amazon linux | 387MB                | ~130MB            |
+| richarvey/awscli    | < 2.2.9         | debian slim  | ~178MB               | ~67.6MB           |
+| richarvey/awscli    | latest,2.2.10+  | alpine linux | 97.6MB               | ~29.6MB           |       
 
 __Why else?__
 
