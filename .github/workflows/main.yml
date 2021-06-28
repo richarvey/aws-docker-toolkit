@@ -31,8 +31,7 @@ jobs:
           echo "Getting all releases"
           curl https://api.github.com/repos/aws/aws-cli/tags | jq -r '.[0].name' | grep -v dev > releases && cat releases | head -n1 > latest
           curl https://api.github.com/repos/WAOptics/aws-docker-toolkit/tags | jq -r '.[0].name' | grep -v dev > releases && cat releases | head -n1 > local_version
-          echo "local_version =`cat local_version`" > build
-          if [ $local_version != $latest_version ]; then echo "build = true" >> $GITHUB_ENV; else echo "build = false" >> $GITHUB_ENV;  fi
+          if [ $local_version != $latest_version ]; then echo "true" > build ; fi
           echo "::set-output name=latest_version::`cat latest`"
           echo "::set-output name=local_version::`cat local_version`"
           echo "::set-output name=build::`cat build`"
