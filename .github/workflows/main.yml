@@ -111,10 +111,9 @@ jobs:
       -
         name: Tag Release
         uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ needs.checkTags.outputs.build }} == "true"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ needs.checkTags.outputs.latest_version }}"
+          automatic_release_tag: "${{ needs.build.outputs.latest_version }}"
           prerelease: false
           title: "${{ needs.build.outputs.latest_version }}"
           files: |
