@@ -42,7 +42,7 @@ jobs:
       - name: Build an image from Dockerfile
         run: |
           echo Latest Version = ${{ env.latest_version }}
-          echo Build Status = ${( env.build }}
+          echo Build Status = ${{ env.build }}
           docker build -t docker.io/richarvey/awscli:latest .
 
       - name: Run Trivy vulnerability scanner
@@ -83,7 +83,7 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: richarvey/awscli:latest, richarvey/awscli:${{ env.latest_version }}
+          tags: richarvey/awscli:latest,richarvey/awscli:${{ env.latest_version }}
       -
         name: Image digest
         if: ${{ env.build == 'true' }}
