@@ -86,7 +86,7 @@ jobs:
         name: Validate Build
         id: latestTag
         if: ${{ needs.checkTags.outputs.build }} == "true"
-        run:
+        run: |
 	  echo Building Version ${{ needs.checkTags.outputs.latest_version }}
           echo ${{ needs.checkTags.outputs.latest_version }} > latest  
           echo "::set-output name=latest_version::`cat latest`"
