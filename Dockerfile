@@ -1,4 +1,4 @@
-FROM python:3-alpine3.13 AS installer
+FROM python:3-alpine AS installer
 
 RUN apk add --no-cache \
     gcc \
@@ -45,7 +45,7 @@ RUN sed -i '/botocore/d' requirements.txt \
 RUN unzip dist/awscli-exe.zip \
     && ./aws/install --bin-dir /aws-cli-bin
 
-FROM alpine:3.13
+FROM alpine:3
 LABEL maintainer=“ric@digilution.io”
 
 RUN apk add --update --no-cache \
