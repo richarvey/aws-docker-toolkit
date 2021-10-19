@@ -1,4 +1,4 @@
-FROM python:3-alpine AS installer
+FROM python:3.9-alpine AS installer
 
 RUN apk add --no-cache \
     gcc \
