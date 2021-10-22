@@ -4,6 +4,8 @@ This is dockerized version of the awscli, which means you can run the tool witho
 
 I've finally made a unified version which is super slim and from version ```2.2.10``` it's a mere 97.6Mb and is based upon alpine Linux (yes all the musl libc and OpenSSL issues are taken care of) add to this it is available on both x86_64 and arm64.
 
+_Note:_ The 2.3.0 version is currently 113MB, I'll see what i can do to get this sub 100MB asap.
+
 Tags and releases are in line with the AWS CLI version, so you can use that to pull a specific release if needed for example: ```2.2.6```
 ### Why does this version exist?
 
@@ -13,7 +15,8 @@ Amazon provides a container for this already, it's good but it weighed in a litt
 |---------------------|-----------------|--------------|----------------------|-------------------|
 | amazon/aws-cli      | latest          | amazon linux | 387MB                | ~130MB            |
 | richarvey/awscli    | < 2.2.9         | debian slim  | ~178MB               | ~67.6MB           |
-| richarvey/awscli    | latest,2.2.10+  | alpine linux | 97.6MB               | ~29.6MB           |       
+| richarvey/awscli    | 2.2.10+         | alpine linux | 97.6MB               | ~29.6MB           |       
+| richarvey/awscli    | latest,2.3.0+   | alpine linux | ~113MB               | ~31.2MB           |       
 
 __Why else?__
 
