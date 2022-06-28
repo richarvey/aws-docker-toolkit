@@ -35,6 +35,8 @@ RUN pip install --no-cache-dir --upgrade pip \
     && git clone --single-branch --branch v2 https://github.com/boto/botocore /tmp/botocore \
     && cd /tmp/botocore \
     && git checkout $(git log --grep $boto_ver --pretty=format:"%h") \
+    sed -i 's/0.12.4/0.13.3/' setup.py \
+    sed -i 's/0.12.4/0.13.3/' setup.cfg \
     && pip install . \
     && rm -Rf /tmp/botocore  \
     && cd -
