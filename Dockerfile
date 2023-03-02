@@ -1,54 +1,36 @@
-FROM python:3.9-alpine AS installer
+FROM python:3.10.10-alpine3.17 AS installer
 
 RUN apk add --no-cache \
-    gcc \
-    git \
-    libc-dev \
-    libffi-dev \
-    openssl-dev \
-    py3-pip \
-    zlib-dev \
-    make \
-    openssl \
-    perl \
-    libunwind-dev \
-    bash \
-    curl \
-    jq \
-    cmake
+        git \
+        unzip \
+        groff \
+        build-base \
+        libffi-dev \
+        cmake \
+        bash \
+        curl \
+        jq 
 
 COPY get_tags.sh /get_tags.sh
 RUN /get_tags.sh && export AWSCLI_VERSION=`cat releases | head -1` && git clone --recursive  --depth 1 --branch ${AWSCLI_VERSION} --single-branch https://github.com/aws/aws-cli.git
 
 WORKDIR /aws-cli
 
-# Follow https://github.com/six8/pyinstaller-alpine to install pyinstaller on alpine
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir pycrypto \
-    && git clone --depth 1 --single-branch --branch v$(grep PyInstaller requirements-build.txt | cut -d'=' -f3) https://github.com/pyinstaller/pyinstaller.git /tmp/pyinstaller \
-    && cd /tmp/pyinstaller/bootloader \
-    && CFLAGS="-Wno-stringop-overflow -Wno-stringop-truncation" python ./waf configure --no-lsb all \
-    && pip install .. \
-    && rm -Rf /tmp/pyinstaller \
-    && cd - \
-    && boto_ver=$(grep botocore setup.cfg | cut -d'=' -f3) \
-    && git clone --single-branch --branch v2 https://github.com/boto/botocore /tmp/botocore \
-    && cd /tmp/botocore \
-    && git checkout $(git log --grep $boto_ver --pretty=format:"%h") \
-    && sed -i 's/0.12.4/0.13.3/' setup.py \
-    && sed -i 's/0.12.4/0.13.3/' setup.cfg \
-    && pip install . \
-    && rm -Rf /tmp/botocore  \
-    && cd -
+RUN python -m venv venv && \
+ . venv/bin/activate && \
+ scripts/installers/make-exe && \
+ unzip -q dist/awscli-exe.zip && \
+ aws/install --bin-dir /aws-cli-bin && \
+ /aws-cli-bin/aws --version
 
-RUN sed -i '/botocore/d' requirements.txt \
-    && scripts/installers/make-exe
+# reduce image size: remove autocomplete and examples
+RUN rm -rf /usr/local/aws-cli/v2/current/dist/aws_completer /usr/local/aws-cli/v2/current/dist/awscli/data/ac.index /usr/local/aws-cli/v2/current/dist/awscli/examples
+RUN find /usr/local/aws-cli/v2/current/dist/awscli/data -name completions-1*.json -delete
+RUN find /usr/local/aws-cli/v2/current/dist/awscli/botocore/data -name examples-1.json -delete
 
-RUN unzip dist/awscli-exe.zip \
-    && ./aws/install --bin-dir /aws-cli-bin
 
 FROM alpine:3
-LABEL maintainer=“ric@digilution.io”
+LABEL maintainer=“ric@squarecows.com”
 
 RUN apk add --update --no-cache \
     less \
