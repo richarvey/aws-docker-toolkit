@@ -1,4 +1,4 @@
-## AWS Toolkit - [![build](https://github.com/richarvey/aws-docker-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/richarvey/aws-docker-toolkit/actions/workflows/main.yml)![docker pulls](![image size](https://img.shields.io/docker/pulls/richarvey/awscli)
+## AWS Toolkit - [![build](https://github.com/richarvey/aws-docker-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/richarvey/aws-docker-toolkit/actions/workflows/main.yml)![docker pulls](https://img.shields.io/docker/pulls/richarvey/awscli)
 
 This is dockerized version of the awscli, which means you can run the tool without directly installing it on your system. It's simple to map your AWS credentials to this container and even set up a __.bash_profile__ so you can just type ```aws``` in the command line. The image is auto-built daily to ensure the Linux base image is constantly updated in the background and that you have the latest awscli version.
 
