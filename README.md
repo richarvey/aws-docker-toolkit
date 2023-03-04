@@ -46,6 +46,14 @@ Run the container and map a local directory (for files you may want to use) and 
 docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest ${COMMAND}
 ```
 
+#### Switching profile
+
+Instead of including ```--profile SomeProfile``` in each command you can also use the ```-e AWS_PROFILE=SomeProfile``` in the docker command. This can be particularly useful when setting up your bash profile and allows us to use different alias' for different accounts. To run fromt he command line do the following:
+
+```
+docker run -it -e AWS_PROFILE=SomeProfile -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws richarvey/awscli:latest ${COMMAND}
+```
+
 ## Adding to .bash_profile for :latest
 
 You can set an alias and then use awscli as normal from your shell if desired, this makes it super easy to access.
@@ -61,6 +69,25 @@ aws() {
 ```
 
 Now when you call ```aws``` from the command line (don't forget to source your bash_profile) you'll have direct access to the aws command as if it were installed on your system. 
+
+For advanced use and multiple profiles try something like the following:
+
+```
+vi ~/.bash_profile
+```
+
+```
+# default account
+aws() {
+  docker run -it -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest "$@";
+}
+
+# Named profile account from .aws/config file
+aws_profile_name() {
+  docker run -it -e AWS_PROFILE=SomeProfile -v `pwd`:/cfg -v ~/.aws:/home/awsuser/.aws --rm richarvey/awscli:latest "$@";
+}
+
+```
 
 ## Building yourself
 
