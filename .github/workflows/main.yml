@@ -35,7 +35,7 @@ jobs:
           echo "latest_version=`cat latest`" >> $GITHUB_OUTPUT
           echo "local_version=`cat local_version`" >> $GITHUB_OUTPUT
           echo "build=`cat build`" >> $GITHUB_OUTPUT
-          format: 'template'
+  
   build:
     name: Build
     needs: checkTags
