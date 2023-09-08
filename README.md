@@ -9,7 +9,7 @@ Tags and releases are in line with the AWS CLI version, so you can use that to p
 
 Amazon provides a container for this already, it's good but it weighed in a little heavy for me at ~387MB. I wanted this as small as possible and managed to shave off ~290MB on the uncompressed image.
 
-|Image                | Version         | Base         | Size (uncomnpressed) | Size (compressed) |
+|Image                | Version         | Base         | Size (uncompressed)  | Size (compressed) |
 |---------------------|-----------------|--------------|----------------------|-------------------|
 | amazon/aws-cli      | latest          | amazon linux | 387MB                | ![image size](https://img.shields.io/docker/image-size/amazon/aws-cli)          |
 | richarvey/awscli    | < 2.2.9+        | debian slim  | ~178MB               | ![image size](https://img.shields.io/docker/image-size/richarvey/awscli/2.2.9)  |       
